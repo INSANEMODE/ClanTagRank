@@ -14,9 +14,11 @@ Download the latest ClanTagRank.dll from the release page, and place it in your 
 
 # Limitations:
 
-Currently, these plugins require iw4m-admin to be running locally, on the same machine as your servers, and also needs to be running on the default port 1624.
+Currently, these plugins require iw4m-admin to be running locally, on the same machine as your servers, and also needs the webfront to be running on the default port, 1624.
 
-if either of these aren't followed, you will see an error in your server's console window that looks similar to this ```curl_easy_perform() failed: Couldn't connect to server```
+if either of these aren't followed, or iw4m-admin is not running, you will see an error in your server's console window that looks similar to this 
+
+```curl_easy_perform() failed: Couldn't connect to server```
 
 # Additional required files/programs
 https://github.com/RaidMax/IW4M-Admin/releases
