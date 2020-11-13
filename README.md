@@ -1,5 +1,5 @@
 # ClanTagRank
-
+![preview](https://gitea.insanemode.org/INSANEMODE/ClanTagRank/raw/branch/master/preview/Screenshot%20%281472%29.png)
 # Warning: 
 
 This plugin is currently only intended to run on Plutonium t6 zombies!
