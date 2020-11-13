@@ -10,7 +10,7 @@ This C++ Plutonium t6 plugin and  C# iw4m-admin plugin are used together to grab
 
 # Installation:
 
-Download the latest .zip from the release page, and put the ClanTagRank.dll in your t6 server under ```./t6r/data/plugins```, and ClanTagRankApi.dll in your Iw4m-admin folder under ```./Plugins```
+Download the latest ClanTagRank.dll from the release page, and place it in your t6 server under ```./t6r/data/plugins```, and ClanTagRankApi.dll (from https://gitea.insanemode.org/INSANEMODE/ClanTagRankApi ) in your Iw4m-admin folder under ```./Plugins```
 
 # Limitations:
 
