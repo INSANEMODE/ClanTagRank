@@ -4,6 +4,6 @@
 HMODULE LogHandle;
 namespace Game
 {
-	void Testprint();
+	//void Testprint();
 	void clanTagThread();
 }

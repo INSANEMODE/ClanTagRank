@@ -163,9 +163,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dllmain.h" />
-    <ClInclude Include="dvar.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="Header.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
