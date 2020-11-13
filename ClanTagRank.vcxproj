@@ -22,12 +22,13 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{6742FFFB-2279-451F-B51A-754C165745AC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>bo2plugintest</RootNamespace>
+    <RootNamespace>ClanTagRank</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <TargetFrameworkVersion>
     </TargetFrameworkVersion>
     <TargetFramework>
     </TargetFramework>
+    <ProjectName>ClanTagRank</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -27,7 +27,7 @@
     <ClInclude Include="dllmain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\bo2plugin_test - Copy\framework.h">
+    <ClInclude Include="..\bo2plugin_test\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
