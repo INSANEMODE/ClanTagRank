@@ -6,8 +6,6 @@
 #include <cstdlib>
 #include <chrono>
 #include <thread>
-#include <unordered_set>
-#include <sstream>
 #include <algorithm>
 #include "curl\curl.h"
 
