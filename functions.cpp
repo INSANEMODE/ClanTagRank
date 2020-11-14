@@ -94,9 +94,10 @@ namespace Game
                 changeClanTag = changeClanTag_str.c_str();
                 if ((strstr(currentClanTag, changeClanTag) == NULL) || (strstr(changeClanTag, "Error: Client info is null") == NULL))
                 {
-                    std::cout << "ClanTag Rank: [" + changeClanTag_str + "]" + currentname + '\n';
+                    
                     if(!(changeClanTag_str.find("Error:") != std::string::npos) && !(changeClanTag_str.find("User") != std::string::npos))
                     {
+                        std::cout << "ClanTag Rank: [" + changeClanTag_str + "]" + currentname + '\n';
                         memcpy((void*)(clientAddr + (clientOffset * i) + clanTagAddr), changeClanTag, 8);
 
                     }
@@ -113,7 +114,7 @@ namespace Game
     {
         while (true)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10000));
             clanTagChanger();
         }
 
