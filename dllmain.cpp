@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <string>
-#include "dllmain.h"
+#include "functions.h"
 #include <stdio.h>
 #include <cstdlib>
 #include <chrono>

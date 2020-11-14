@@ -164,7 +164,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\bo2plugin_test - Copy\framework.h" />
-    <ClInclude Include="dllmain.h" />
+    <ClInclude Include="functions.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
