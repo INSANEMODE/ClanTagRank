@@ -13,7 +13,7 @@
 void init()
 {
     
-    std::cout << "ClanTagRank (1.0.3) by INSANEMODE\n";
+    std::cout << "ClanTagRank (1.0.4) by INSANEMODE\n";
     std::thread rank(Game::clanTagThread);
     rank.detach();
 }

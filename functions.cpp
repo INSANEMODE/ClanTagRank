@@ -87,7 +87,7 @@ namespace Game
             memcpy((void*)currentname, (void*)((clientAddr + (clientOffset * i))), 16);
             currentname_str = std::string(currentname, 16);
             memcpy((void*)currentClanTag, (void*)(((clientAddr +(clientOffset * i)) + clanTagAddr)), 8);
-            if ((strstr(currentClanTag, "Creator") == NULL) && (strstr(currentClanTag, "Admin") == NULL) && (strstr(currentClanTag, "Trusted") == NULL) && (strstr(currentClanTag, "Mod") == NULL) && (strstr(currentClanTag, "Owner") == NULL) && (strstr(currentClanTag, "3arc") == NULL) && (strncmp(currentname, emptyname, 16) != 0))
+            if ((strstr(currentClanTag, "Creator") == NULL) && (strstr(currentClanTag, "Admin") == NULL) && (strstr(currentClanTag, "SrAdmin") == NULL) && (strstr(currentClanTag, "Trusted") == NULL) && (strstr(currentClanTag, "Mod") == NULL) && (strstr(currentClanTag, "Owner") == NULL) && (strstr(currentClanTag, "3arc") == NULL) && (strncmp(currentname, emptyname, 16) != 0))
             {
                 changeClanTag_str = ClanTagRequest(currentname);
                 
