@@ -10,15 +10,9 @@ This C++ Plutonium t6 plugin and  C# iw4m-admin plugin are used together to grab
 
 # Installation:
 
-Download the latest ClanTagRank.dll from the release page, and place it in your t6 server under ```./t6r/data/plugins```, and ClanTagRankApi.dll (from https://gitea.insanemode.org/INSANEMODE/ClanTagRankApi ) in your Iw4m-admin folder under ```./Plugins```
+- Download the latest ClanTagRank.dll from the release page, and place it in your t6 server under ```./t6r/data/plugins```, and ClanTagRankApi.dll (from https://gitea.insanemode.org/INSANEMODE/ClanTagRankApi ) in your Iw4m-admin folder under ```./Plugins```
 
-# Limitations:
-
-Currently, these plugins require iw4m-admin to be running locally, on the same machine as your servers, and also needs the webfront to be running on the default port, 1624.
-
-if either of these aren't followed, or iw4m-admin is not running, you will see an error in your server's console window that looks similar to this 
-
-```curl_easy_perform() failed: Couldn't connect to server```
+- Run your server, and GetClanTag.ini will be generated in your ```./t6r/data/plugins``` folder. you can edit the URL in this file to match your iw4m-admin url or port if you aren't running it locally, or if you are not running on the default 1624 port.
 
 # Additional required files/programs
 https://github.com/RaidMax/IW4M-Admin/releases
