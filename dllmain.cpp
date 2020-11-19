@@ -1,4 +1,4 @@
-#include "pch.h"
+
 #include <Windows.h>
 #include <iostream>
 #include <string>
@@ -7,16 +7,17 @@
 #include <cstdlib>
 #include <chrono>
 #include <thread>
+HMODULE LogHandle;
 
 
 
 void init()
 {
     
-    std::cout << "ClanTagRank (1.2) by INSANEMODE\n";
-    std::cout << "loaded iw4m-admin url from .\\Plugins\\GetClanTag.ini: " << Game::configfile() << '\n';
-    std::thread rank(Game::clanTagThread);
-    rank.detach();
+    std::cout << "ClanTagRank (1.3) by INSANEMODE\n";
+    
+    std::thread addcommands(Game::addCommands);
+    addcommands.detach();
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule,
