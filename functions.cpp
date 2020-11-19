@@ -8,10 +8,31 @@
 #include <thread>
 #include <algorithm>
 #include "curl\curl.h"
+#include "simpleini.h"
+#include <filesystem>
+#define GetCurrentDir _getcwd
 
 namespace Game
 
 {
+
+    std::string configfile()
+    {
+
+        CSimpleIniA ini;
+
+        std::string currentpath = std::filesystem::current_path().generic_string();
+        std::string configfile = currentpath + (R"(/t6r/data/plugins/GetClanTag.ini)");
+        SI_Error rc = ini.LoadFile(configfile.c_str());
+        //SI_Error rc = ini.LoadFile("\\t6r\\data\\plugins\\GetClanTag.ini");
+        if (rc < 0) 
+        {
+            ini.SetValue("Config", "URL", "127.0.0.1:1624");
+            ini.SaveFile(configfile.c_str());
+        };
+        const char* pVal = ini.GetValue("Config", "URL", "http://127.0.0.1:1624");
+        return pVal;
+    }
 
 
     static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
@@ -28,7 +49,7 @@ namespace Game
         std::string readBuffer;
         curl = curl_easy_init();
         if (curl) {
-            curl_easy_setopt(curl, CURLOPT_URL, "http://127.0.0.1:1624/api/gsc/clientguid/" + guidstring);
+            curl_easy_setopt(curl, CURLOPT_URL, configfile() + "/api/gsc/clientguid/" + guidstring);
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
             /* example.com is redirected, so we tell libcurl to follow redirection */
@@ -122,6 +143,7 @@ namespace Game
     {
         while (true)
         {
+            configfile();
             std::this_thread::sleep_for(std::chrono::milliseconds(10000));
             clanTagChanger();
         }
