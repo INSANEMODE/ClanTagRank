@@ -1,10 +1,4 @@
-
-//#include "../pch.h"
-#include <windows.h>
-#include <vector>
-#include <cassert>
-#include <mutex>
-
+#include "../stdinc.hpp"
 
 namespace utils::hook
 {

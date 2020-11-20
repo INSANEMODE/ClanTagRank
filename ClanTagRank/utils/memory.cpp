@@ -3,13 +3,9 @@
 	https://github.com/momo5502/open-iw5
 
 */
-//#include "../pch.h"
-#include <windows.h>
-#include <vector>
-#include <cassert>
-#include <mutex>
-#include "memory.hpp"
 
+#include "../stdinc.hpp"
+#include "memory.hpp"
 
 
 namespace utils
