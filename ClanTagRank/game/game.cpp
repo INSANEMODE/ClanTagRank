@@ -38,9 +38,9 @@ namespace game
 	//ConcatArgs_t ConcatArgs = ConcatArgs_t(select_value(0x5FB8B0, 0, 0x502150));
 
 	//Info_SetValueForKey_t Info_SetValueForKey = Info_SetValueForKey_t(select_value(0x497300, 0, 0));
-	Info_ValueForKey_t Info_ValueForKey = Info_ValueForKey_t(select_value(0x68B420, 0, 0));
+	Info_ValueForKey_t Info_ValueForKey = Info_ValueForKey_t(select_value(0x68B420, 0x0046AD00, 0));
 
-	I_CleanStr_t I_CleanStr = I_CleanStr_t(select_value(0x44F2B0, 0, 0));
+	I_CleanStr_t I_CleanStr = I_CleanStr_t(select_value(0x44F2B0, 0x00483F40, 0));
 
 	//SV_GetUserInfo_t SV_GetUserInfo = SV_GetUserInfo_t(select_value(0x68BB90, 0, 0));
 	//SV_Cmd_Argv_t SV_Cmd_Argv = SV_Cmd_Argv_t(select_value(0x6DBF80, 0, 0));
