@@ -12,7 +12,7 @@ void set_clan_tag()
     auto clantag = game::Cmd_Argv(2);
 
     char clean_tag[8] = { 0 };
-    strncpy_s(clean_tag, clantag, 32);
+    strncpy_s(clean_tag, clantag, 7);
     game::I_CleanStr(clean_tag);
 
     const auto clientNum = atoi(client);
