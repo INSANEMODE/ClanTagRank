@@ -154,8 +154,105 @@ namespace game
 		CLIENT_INDEX_COUNT = 0x12,
 	};
 
+	struct ScoreInfo
+	{
+		unsigned short ping;
+		char status;
+		char pad;
+		unsigned short score;
+		unsigned short kills;
+		unsigned short deaths;
+		unsigned short assists;
+		unsigned short extrascore0;
+		unsigned short extrascore1;
+		unsigned short adrenaline;
+	};
+
 	namespace iw5
 	{
+		enum DvarFlags
+		{
+			DVAR_FLAG_NONE = 0,
+			DVAR_FLAG_ARCHIVE = 1,			// config saved
+			DVAR_FLAG_LATCHED = 2,			// read only
+			DVAR_FLAG_CHEAT = 4,			// cheat protected
+			DVAR_FLAG_REPLICATED = 8,		// send to client
+			DVAR_FLAG_UNK1 = 16,
+			DVAR_FLAG_UNK2 = 32,
+			DVAR_FLAG_UNK3 = 64,
+			DVAR_FLAG_UNK4 = 128,			// bg_regdvars used
+			DVAR_FLAG_USERCREATED = 256,	// set cmd, or script created
+			DVAR_FLAG_UNK5 = 512,
+			DVAR_FLAG_UNK6 = 1024,
+			DVAR_FLAG_UNK7 = 2048,
+			DVAR_FLAG_UNK8 = 4096,
+		};
+
+		enum DvarType
+		{
+			DVAR_TYPE_BOOL = 0,
+			DVAR_TYPE_FLOAT = 1,
+			DVAR_TYPE_FLOAT_2 = 2,
+			DVAR_TYPE_FLOAT_3 = 3,
+			DVAR_TYPE_FLOAT_4 = 4,
+			DVAR_TYPE_INT = 5,
+			DVAR_TYPE_ENUM = 6,
+			DVAR_TYPE_STRING = 7,
+			DVAR_TYPE_COLOR = 8,
+			//DVAR_TYPE_INT64 = 9
+		};
+
+		union DvarValue
+		{
+			bool enabled;
+			int integer;
+			unsigned int unsignedInt;
+			float value;
+			float vector[4];
+			const char* string;
+			char color[4];
+		};
+
+		struct EnumLimits
+		{
+			int stringCount;
+			const char** strings;
+		};
+
+		struct IntegerLimits
+		{
+			int min;
+			int max;
+		};
+
+		struct FloatLimits
+		{
+			float min;
+			float max;
+		};
+
+		union DvarLimits
+		{
+			EnumLimits enumeration;
+			IntegerLimits integer;
+			FloatLimits value;
+			FloatLimits vector;
+		};
+
+		struct dvar_t
+		{
+			const char* name;
+			unsigned int flags;
+			char type;
+			bool modified;
+			DvarValue current;
+			DvarValue latched;
+			DvarValue reset;
+			DvarLimits domain;
+			bool(__cdecl* domainFunc)(dvar_t*, DvarValue);
+			dvar_t* hashNext;
+		};
+
 		struct __declspec(align(8)) clientState_s
 		{
 			int clientIndex;
@@ -203,51 +300,183 @@ namespace game
 		};
 #pragma pack(pop)
 
-		struct __declspec(align(8)) clientSession_t
+		struct clientSession_t
 		{
 			int sessionState;
 			int forceSpectatorClient;
-			int isInKillcam;
 			int killCamEntity;
-			int killCamTargetEntity;
-			int archiveTime;
-			unsigned __int16 scriptPersId;
-			char _0x16[0x2];
-			int connected;
+			int isInKillcam;
+			char __0x332C[0x14];
 			usercmd_s cmd;
-			usercmd_s old_cmd;
-			char _0xAC[0x20];
-			int maxHealth;
-			int enterTime;
-			char _0xD4[0x4];
-			int voteCount;
-			int teamVoteCount;
+			usercmd_s oldcmd;
+			int localClient;
+			char __0x33C4[0x24];
 			float moveSpeedScaleMultiplier;
 			int viewmodelIndex;
 			int noSpectate;
-			int teamInfo;
 			clientState_s cs;
-			char _0x1CC[0x1D4];
+			ScoreInfo scores;
+			char __pad[0x1B0];
+		};
+
+		struct playerState_s
+		{
+			int commandTime;
+			int pm_type;
+			int pm_time;
+			int pm_flags;
+			int otherFlags;
+			int linkFlags;
+			int bobCycle;
+			float origin[3];
+			float velocity[3];
+			int grenadeTimeLeft;
+			int throwbackGrenadeOwner;
+			int throwbackGrenadeTimeLeft;
+			Weapon throwbackWeapon;
+			int movingPlatformEntity;
+			int remoteEyesEnt;
+			int remoteEyesTagname;
+			int remoteControlEnt;
+			int remoteTurretEnt;
+			int foliageSoundTime;
+			int gravity; int speed;
+			float delta_angles[3];
+			int groundEntityNum;
+			float vLadderVec[3];
+			int jumpTime;
+			float jumpOriginZ;
+			int legsTimer;
+			int legsAnim;
+			int torsoTimer;
+			int torsoAnim;
+			int animMoveType;
+			int damageTimer;
+			int damageDuration;
+			int flinch;
+			int movementDir;
+			int turnStartTime;
+			int turnDirection;
+			int turnRemaining;
+			int corpseIndex;
+			char _0xB8[0x3190];
 		};
 
 		struct gclient_t
 		{
-			char _0x0[0x3300];
+			playerState_s ps;
 			clientSession_t sess;
-			char _0x36A0[0x400];
+			int flags;
+			int spectatorClient;
+			char __0x36B4[0x3B0];
 		};
 
-#pragma pack(push, 4)
+		union EntityStateIndexUnion
+		{
+			int brushModel;
+			int triggerModel;
+			int xmodel;
+			int primaryLight;
+		};
+
+		struct entityState_s
+		{
+			int	number;
+			int	type;
+			char lerp[0x68]; //struct LerpEntityState 0x68
+			int	staticState; // union StaticEntityStateTypeUnion 0x4
+			int	time2;
+			int	otherEntityNum;
+			int attackerEntityNum;
+			int	groundEntityNum;
+			int	loopSound;
+			int	surfType;
+			EntityStateIndexUnion index;
+			int	clientNum;
+			// clientnum   // 144 0x90
+		};
+
 		struct gentity_t
 		{
-			char _0x0[0x168];
-			gclient_t* client;
-			char _0x158[0x180];
-		};
+			entityState_s state;
+			//entity_shared		shared;
+			//gclient_s			client; // 344 [0x158]
+		}; // 0x1F8
 	}
 
 	namespace t6
 	{
+		enum dvarType_t
+		{
+			DVAR_TYPE_INVALID = 0x0,
+			DVAR_TYPE_BOOL = 0x1,
+			DVAR_TYPE_FLOAT = 0x2,
+			DVAR_TYPE_FLOAT_2 = 0x3,
+			DVAR_TYPE_FLOAT_3 = 0x4,
+			DVAR_TYPE_FLOAT_4 = 0x5,
+			DVAR_TYPE_INT = 0x6,
+			DVAR_TYPE_ENUM = 0x7,
+			DVAR_TYPE_STRING = 0x8,
+			DVAR_TYPE_COLOR = 0x9,
+			DVAR_TYPE_INT64 = 0xA,
+			DVAR_TYPE_LINEAR_COLOR_RGB = 0xB,
+			DVAR_TYPE_COLOR_XYZ = 0xC,
+			DVAR_TYPE_COUNT = 0xD,
+		};
+
+		union DvarValue
+		{
+			bool enabled;
+			int integer;
+			unsigned int unsignedInt;
+			__int64 integer64;
+			unsigned __int64 unsignedInt64;
+			float value; vec4_t vector;
+			const char* string;
+			char color[4];
+		};
+
+		struct $A37BA207B3DDD6345C554D4661813EDD
+		{
+			int stringCount;
+			const char* const* strings;
+		};
+
+		struct $9CA192F9DB66A3CB7E01DE78A0DEA53D
+		{
+			int min;
+			int max;
+		};
+
+		struct $251C2428A496074035CACA7AAF3D55BD
+		{
+			float min;
+			float max;
+		};
+
+		union DvarLimits
+		{
+			$A37BA207B3DDD6345C554D4661813EDD enumeration;
+			$9CA192F9DB66A3CB7E01DE78A0DEA53D integer;
+			$251C2428A496074035CACA7AAF3D55BD value;
+			$251C2428A496074035CACA7AAF3D55BD vector;
+		};
+
+		struct dvar_t
+		{
+			const char* name;
+			const char* description;
+			int hash;
+			unsigned int flags;
+			dvarType_t type;
+			bool modified;
+			DvarValue current;
+			DvarValue latched;
+			DvarValue reset;
+			DvarLimits domain;
+			dvar_t* hashNext;
+		};
+
 		struct __declspec(align(8)) clientState_s
 		{
 			int clientIndex;

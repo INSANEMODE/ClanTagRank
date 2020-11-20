@@ -33,7 +33,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>F:\SteamLibrary\Call of Duty Black Ops II - Copy\t6r\data\plugins\</OutDir>
+    <OutDir>..\..\..\..\AppData\Local\Plutonium\storage\iw5\plugins\</OutDir>
     <TargetName>clantag</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

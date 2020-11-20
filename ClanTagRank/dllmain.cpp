@@ -6,39 +6,58 @@
 utils::memory::allocator allocator;
 const char* clantags[18];
 
+int get_maxclients()
+{
+    if (strcmp(game::gamename.data(), "t6mp") == 0 || strcmp(game::gamename.data(), "t6zm") == 0)
+    {
+        return game::t6::Dvar_FindVar("sv_maxclients")->current.integer;
+    }
+
+    return game::iw5::Dvar_FindVar("sv_maxclients")->current.integer;
+}
+
 void set_clan_tag()
 {
     const auto client = game::Cmd_Argv(1);
     auto clantag = game::Cmd_Argv(2);
 
-    char clean_tag[8] = { 0 };
-    strncpy_s(clean_tag, clantag, 32);
-    game::I_CleanStr(clean_tag);
-
     const auto clientNum = atoi(client);
 
-    if (!clantag || !game::g_entities[clientNum].client)
+    if (clientNum >= get_maxclients())
     {
         return;
     }
-    
-    printf("setting clantag to %s for client %i\n", clean_tag, clientNum);
+
+    char clean_tag[8] = { 0 };
+    strncpy_s(clean_tag, clantag, 7);
+    game::I_CleanStr(clean_tag);
 
     clantags[clientNum] = clean_tag;
-    memcpy((void*)(game::g_entities[clientNum].client->sess.cs.clanAbbrev), clean_tag, 8);
+    game::ClientUserInfoChanged(clientNum);
+
+    printf("setting clantag to %s for client %i\n", clean_tag, clientNum);
 }
 
 game::Info_ValueForKey_t Info_ValueForKey_hook;
 const char* Info_ValueForKey_stub(const char* s, const char* key)
 {
-    if (strcmp(key, "clanAbbrev") == 0 || strcmp(key, "clanAbbrevEv") == 0)
+    if (strcmp(key, "clanAbbrev") != 0 && strcmp(key, "ec_TagText") != 0 && strcmp(key, "clanAbbrevEv") != 0)
     {
-        const auto user_info = utils::string::split(s, 92);
-        auto client = atoi(user_info[user_info.size() - 3].data());
+        return Info_ValueForKey_hook(s, key);
+    }
 
-        if (client > 0 && client < 18 && clantags[client] != NULL)
+    const auto sv_maxclients = get_maxclients();
+
+    printf("%i\n", sv_maxclients);
+
+    for (auto i = 0; i < sv_maxclients; i++)
+    {
+        char buffer[2048];
+        game::SV_GetUserInfo(i, buffer, 2048);
+
+        if (clantags[i] != NULL && strcmp(s, buffer) == 0)
         {
-            return clantags[client];
+            return clantags[i];
         }
     }
 
