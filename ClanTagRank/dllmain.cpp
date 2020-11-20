@@ -4,7 +4,7 @@
 #include "utils/string.hpp"
 
 utils::memory::allocator allocator;
-const char* clantags[18];
+std::string clantags[18];
 
 int get_maxclients()
 {
@@ -32,10 +32,10 @@ void set_clan_tag()
     strncpy_s(clean_tag, clantag, 7);
     game::I_CleanStr(clean_tag);
 
-    clantags[clientNum] = clean_tag;
+    clantags[clientNum] = std::string(clean_tag);
     game::ClientUserInfoChanged(clientNum);
 
-    printf("setting clantag to %s for client %i\n", clean_tag, clientNum);
+    printf("setting clantag to %s for client %i\n", clantags[clientNum].data(), clientNum);
 }
 
 game::Info_ValueForKey_t Info_ValueForKey_hook;
@@ -53,9 +53,9 @@ const char* Info_ValueForKey_stub(const char* s, const char* key)
         char buffer[2048];
         game::SV_GetUserInfo(i, buffer, 2048);
 
-        if (clantags[i] != NULL && strcmp(s, buffer) == 0)
+        if (!clantags[i].empty() && strcmp(s, buffer) == 0)
         {
-            return clantags[i];
+            return clantags[i].data();
         }
     }
 
