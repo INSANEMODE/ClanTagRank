@@ -41,6 +41,11 @@ void set_clan_tag()
 game::Info_ValueForKey_t Info_ValueForKey_hook;
 const char* Info_ValueForKey_stub(const char* s, const char* key)
 {
+    if (strcmp(key, "ec_usingTag") == 0)
+    {
+        return "1";
+    }
+
     if (strcmp(key, "clanAbbrev") != 0 && strcmp(key, "ec_TagText") != 0 && strcmp(key, "clanAbbrevEv") != 0)
     {
         return Info_ValueForKey_hook(s, key);
