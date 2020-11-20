@@ -16,14 +16,22 @@ int get_maxclients()
     return game::iw5::Dvar_FindVar("sv_maxclients")->current.integer;
 }
 
+void set_clan_tag_(int clientNum, std::string clantag)
+{
+    clantags[clientNum] = clantag;
+    game::ClientUserInfoChanged(clientNum);
+    printf("setting clantag to %s for client %i\n", clantag.data(), clientNum);
+}
+
 void set_clan_tag()
 {
     const auto client = game::Cmd_Argv(1);
     auto clantag = game::Cmd_Argv(2);
 
     const auto clientNum = atoi(client);
+    auto sv_maxclients = get_maxclients();
 
-    if (clientNum >= get_maxclients())
+    if (clientNum >= sv_maxclients)
     {
         return;
     }
@@ -32,10 +40,49 @@ void set_clan_tag()
     strncpy_s(clean_tag, clantag, 7);
     game::I_CleanStr(clean_tag);
 
-    clantags[clientNum] = std::string(clean_tag);
-    game::ClientUserInfoChanged(clientNum);
+    set_clan_tag_(clientNum, std::string(clean_tag));
+}
 
-    printf("setting clantag to %s for client %i\n", clantags[clientNum].data(), clientNum);
+void set_clan_tag_raw()
+{
+    const auto client = game::Cmd_Argv(1);
+    auto clantag = game::Cmd_Argv(2);
+
+    const auto clientNum = atoi(client);
+    auto sv_maxclients = get_maxclients();
+
+    if (clientNum >= sv_maxclients)
+    {
+        return;
+    }
+
+    set_clan_tag_(clientNum, std::string(clantag));
+}
+
+void set_clan_tags()
+{
+    auto clantag = game::Cmd_Argv(1);
+    auto sv_maxclients = get_maxclients();
+
+    char clean_tag[8] = { 0 };
+    strncpy_s(clean_tag, clantag, 7);
+    game::I_CleanStr(clean_tag);
+
+    for (auto i = 0; i < sv_maxclients; i++)
+    {
+        set_clan_tag_(i, std::string(clean_tag));
+    }
+}
+
+void set_clan_tags_raw()
+{
+    auto clantag = game::Cmd_Argv(1);
+    auto sv_maxclients = get_maxclients();
+
+    for (auto i = 0; i < sv_maxclients; i++)
+    {
+        set_clan_tag_(i, std::string(clantag));
+    }
 }
 
 game::Info_ValueForKey_t Info_ValueForKey_hook;
@@ -72,6 +119,9 @@ void init()
     Info_ValueForKey_hook = utils::hook::vp::detour(game::Info_ValueForKey, Info_ValueForKey_stub, 5);
 
     game::Cmd_AddCommandInternal("setclantag", set_clan_tag, allocator.allocate<game::cmd_function_t>());
+    game::Cmd_AddCommandInternal("setclantagraw", set_clan_tag_raw, allocator.allocate<game::cmd_function_t>());
+    game::Cmd_AddCommandInternal("setclantags", set_clan_tags, allocator.allocate<game::cmd_function_t>());
+    game::Cmd_AddCommandInternal("setclantagsraw", set_clan_tags_raw, allocator.allocate<game::cmd_function_t>());
 }
 
 BOOL APIENTRY DllMain( HMODULE hModule,
