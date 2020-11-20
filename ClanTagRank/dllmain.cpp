@@ -67,6 +67,8 @@ void init()
     Info_ValueForKey_hook = utils::hook::vp::detour(game::Info_ValueForKey, Info_ValueForKey_stub, 5);
 
     game::Cmd_AddCommandInternal("setclantag", set_clan_tag, allocator.allocate<game::cmd_function_t>());
+
+    std::cout << "ClanTagRank (1.4) by INSANEMODE\n";
 }
 
 BOOL APIENTRY DllMain( HMODULE hModule,
