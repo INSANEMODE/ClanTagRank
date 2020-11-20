@@ -1,6 +1,6 @@
 #pragma once
 
-// stolen from plutoscript
+// plutoscript
 
 namespace utils::hook
 {
