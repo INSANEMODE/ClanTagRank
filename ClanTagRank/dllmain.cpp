@@ -48,8 +48,6 @@ const char* Info_ValueForKey_stub(const char* s, const char* key)
 
     const auto sv_maxclients = get_maxclients();
 
-    printf("%i\n", sv_maxclients);
-
     for (auto i = 0; i < sv_maxclients; i++)
     {
         char buffer[2048];
