@@ -4,10 +4,15 @@
 # Description:
 
 This C++ plugin for Plutonium t6mp, t6zm, and iw5.
-the function of this plugin is to allow the clan tag to be set through rcon/console using ```setclantag <client slot> <clantag name>```
+the function of this plugin is to allow the clan tag to be set through rcon/console. 
 
-this paired with a C# iw4m-admin plugin are used together to grab the iw4m-admin permission level name (Owner, Admin, etc) or a custom tag for a client, and set it as their clan tag in game.
+This can be paired with [SetClanTagCommands](https://github.com/INSANEMODE/ClanTagRankCommnads) to grab the iw4m-admin permission level name (Owner, Admin, etc) or a custom tag for a client, and set it as their clan tag in game.
 
+# Usage
+```setclantag <client slot> <clantag name>``` : set a single client's clan tag
+```setclantags <clantag name>``` : set all clients' clantag in the lobby
+```setclantagraw <client slot> <clantag name>``` : same as setclantag, but allow raw strings to be set as clantags (allows things like color codes)
+```setclantagsraw <clantag name>``` : same as setclantags, but allow raw strings to be set as clantags
 # Installation:
 
 - Download the latest ClanTagRank.dll from the release page, and place it in your t6 server under ```./t6r/data/plugins```.
