@@ -2,8 +2,9 @@
 
 namespace game
 {
-	std::string get_gamename();
 	extern std::string gamename;
+
+	extern int get_maxclients();
 
 	typedef void (*Cmd_AddCommandInternal_t)(const char*, void(), cmd_function_t* allocedCmd);
 	extern Cmd_AddCommandInternal_t Cmd_AddCommandInternal;
