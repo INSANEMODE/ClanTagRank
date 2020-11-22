@@ -33,6 +33,12 @@
     <ClInclude Include="utils\string.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="command\command.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="userinfo\userinfo.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -48,6 +54,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utils\string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="command\command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="userinfo\userinfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -58,6 +58,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="userinfo\userinfo.hpp" />
+    <ClInclude Include="command\command.hpp" />
     <ClInclude Include="game\game.hpp" />
     <ClInclude Include="game\structs.hpp" />
     <ClInclude Include="utils\hook.hpp" />
@@ -66,6 +68,8 @@
     <ClInclude Include="utils\string.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="userinfo\userinfo.cpp" />
+    <ClCompile Include="command\command.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="game\game.cpp" />
     <ClCompile Include="utils\hook.cpp" />
