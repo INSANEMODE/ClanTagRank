@@ -1,5 +1,4 @@
 #include "../stdinc.hpp"
-#include "command.hpp"
 
 namespace command
 {
@@ -19,7 +18,7 @@ namespace command
 
 	int params::size()
 	{
-		//return game::Cmd_Argc();
+		return game::Cmd_Argc();
 	}
 
 	const char* params::get(int index)

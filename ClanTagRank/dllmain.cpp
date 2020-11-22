@@ -1,12 +1,5 @@
 #include "stdinc.hpp"
 
-#include "utils/hook.hpp"
-#include "utils/memory.hpp"
-#include "utils/string.hpp"
-
-#include "command/command.hpp"
-#include "userinfo/userinfo.hpp"
-
 utils::memory::allocator allocator;
 
 std::string clantags[18];
@@ -45,6 +38,99 @@ void init()
     userinfo::add("name", name_stub);
 
     userinfo::add("ec_usingTag", using_tag_stub);
+
+    command::add("tellraw", [](command::params& params)
+    {
+        if (params.size() < 3)
+        {
+            return;
+        }
+
+        const auto client = atoi(params.get(1));
+        const auto message = params.join(2);
+
+        game::SV_GameSendServerCommand(client, 0, utils::string::va("%c \"%s\"", 
+            SELECT_VALUE(106, 106, 84), message.data()));
+
+        printf("tell %i -> %s\n", client, message.data());
+    });
+
+    command::add("sayraw", [](command::params& params)
+    {
+        if (params.size() < 2)
+        {
+            return;
+        }
+
+        const auto message = params.join(1);
+
+        game::SV_GameSendServerCommand(-1, 0, utils::string::va("%c \"%s\"", 
+            SELECT_VALUE(106, 106, 84), message.data()));
+
+        printf("say -> %s\n", message.data());
+    });
+
+    command::add("clientprint", [](command::params& params)
+    {
+        if (params.size() < 3)
+        {
+            return;
+        }
+
+        const auto client = atoi(params.get(1));
+        const auto message = params.join(2);
+
+        game::SV_GameSendServerCommand(client, 0, utils::string::va("%c \"%s\"",
+            SELECT_VALUE(59, 59, 102), message.data()));
+
+        printf("print %i -> %s\n", client, message.data());
+    });
+
+    command::add("allclientsprint", [](command::params& params)
+    {
+        if (params.size() < 2)
+        {
+            return;
+        }
+
+        const auto message = params.join(1);
+
+        game::SV_GameSendServerCommand(-1, 0, utils::string::va("%c \"%s\"",
+            SELECT_VALUE(59, 59, 102), message.data()));
+
+        printf("print -> %s\n", message.data());
+    });
+
+    command::add("clientprintbold", [](command::params& params)
+    {
+        if (params.size() < 3)
+        {
+            return;
+        }
+
+        const auto client = atoi(params.get(1));
+        const auto message = params.join(2);
+
+        game::SV_GameSendServerCommand(client, 0, utils::string::va("%c \"%s\"", 
+            SELECT_VALUE(60, 60, 99), message.data()));
+
+        printf("printbold %i -> %s\n", client, message.data());
+    });
+
+    command::add("allclientsprintbold", [](command::params& params)
+    {
+        if (params.size() < 2)
+        {
+            return;
+        }
+
+        const auto message = params.join(1);
+
+        game::SV_GameSendServerCommand(-1, 0, utils::string::va("%c \"%s\"", 
+            SELECT_VALUE(60, 60, 99), message.data()));
+
+        printf("printbold -> %s\n", message.data());
+    });
 
     command::add("setclantag", [](command::params& params)
     {

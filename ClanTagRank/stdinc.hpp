@@ -14,9 +14,16 @@
 #include <algorithm>
 #include <functional>
 
+#include "utils/string.hpp"
+#include "utils/hook.hpp"
+#include "utils/memory.hpp"
+
 #include "game/structs.hpp"
 #include "game/game.hpp"
 
-#define SELECT_VALUE(t6mp, t6zm, iw5mp) (is_t6mp() ? (t6mp) : is_t6zm() ? (t6zm) : (iw5mp))
+#include "command/command.hpp"
 
-#include "utils/string.hpp"
+#include "userinfo/userinfo.hpp"
+
+#define SELECT_VALUE(t6mp, t6zm, iw5mp) (game::is_t6mp() ? (t6mp) : game::is_t6zm() ? (t6zm) : (iw5mp))
+

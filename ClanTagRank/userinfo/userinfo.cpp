@@ -1,6 +1,4 @@
 #include "../stdinc.hpp"
-#include "userinfo.hpp"
-#include "../utils/hook.hpp"
 
 namespace
 {
