@@ -122,7 +122,6 @@ void init()
     game::Cmd_AddCommandInternal("setclantagraw", set_clan_tag_raw, allocator.allocate<game::cmd_function_t>());
     game::Cmd_AddCommandInternal("setclantags", set_clan_tags, allocator.allocate<game::cmd_function_t>());
     game::Cmd_AddCommandInternal("setclantagsraw", set_clan_tags_raw, allocator.allocate<game::cmd_function_t>());
-    std::cout << "ClanTagRank (1.4.1) by INSANEMODE\n";
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule,
