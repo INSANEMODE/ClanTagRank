@@ -18,9 +18,10 @@
 
 using namespace std::literals;
 
+#include "utils/memory.hpp"
 #include "utils/string.hpp"
 #include "utils/hook.hpp"
-#include "utils/memory.hpp"
+
 
 #include "game/structs.hpp"
 #include "game/game.hpp"
