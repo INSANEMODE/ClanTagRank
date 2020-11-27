@@ -111,6 +111,6 @@ namespace command
 
 	void init()
 	{
-		ClientCommand_hook = utils::hook::vp::detour(game::ClientCommand, ClientCommand_stub, 6);
+		ClientCommand_hook = utils::hook::vp::detour(game::ClientCommand, ClientCommand_stub, 5);
 	}
 }

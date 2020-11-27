@@ -88,12 +88,12 @@ namespace game
 	SV_GameSendServerCommand_t SV_GameSendServerCommand = SV_GameSendServerCommand_t(SELECT_VALUE(0x45D7D0, 0x40D450, 0x573220));
 
 	ClientUserInfoChanged_t ClientUserInfoChanged = ClientUserInfoChanged_t(SELECT_VALUE(0x4ED6A0, 0x427DC0, 0x4FADB0));
-	ClientCommand_t ClientCommand = ClientCommand_t(SELECT_VALUE(0x47E590, 0, 0x502CB0));
+	ClientCommand_t ClientCommand = ClientCommand_t(SELECT_VALUE(0x47E590, 0x4490C0, 0x502CB0));
 	//ClientDisconnect_t ClientDisconnect = ClientDisconnect_t(SELECT_VALUE(0x4ED6A0, 0, 0));
 
 	//gclient_t* g_clients = reinterpret_cast<gclient_t*>(SELECT_VALUE(0x2370BA0, 0, 0));
 	//iw5::gentity_t* g_entities = reinterpret_cast<iw5::gentity_t*>(SELECT_VALUE(0x21EF7C0, 0x21C13C0, 0x1A66E28));
 
 	//CmdArgs* cmd_args = reinterpret_cast<CmdArgs*>(SELECT_VALUE(0, 0, 0x1C978D0));
-	CmdArgs* sv_cmd_args = reinterpret_cast<CmdArgs*>(SELECT_VALUE(0, 0, 0x1CAA998));
+	CmdArgs* sv_cmd_args = reinterpret_cast<CmdArgs*>(SELECT_VALUE(0x255DD48, 0x252F8C8, 0x1CAA998));
 }

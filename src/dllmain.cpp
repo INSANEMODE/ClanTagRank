@@ -28,11 +28,6 @@ const char* using_tag_stub(const char* s, const char* key, const char* result, i
 
 void init()
 {
-    chat::add("test", [](int clientNum, command::params_sv& params, std::function<void()> next)
-    {
-        chat::tellraw(clientNum, "lol");
-    });
-
     userinfo::add("ec_TagText", clantag_stub);
     userinfo::add("clanAbbrev", clantag_stub);
     userinfo::add("clanAbbrevEv", clantag_stub);
@@ -239,7 +234,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         }
 
         userinfo::init();
-
         init();
         break;
     }
