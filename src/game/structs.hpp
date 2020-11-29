@@ -38,15 +38,6 @@ namespace game
 		LOCAL_CLIENT_COUNT = 0x1,
 	};
 
-	struct CmdArgs
-	{
-		int nesting;
-		LocalClientNum_t localClientNum[8];
-		int controllerIndex[8];
-		int argc[8];
-		const char** argv[8];
-	};
-
 	struct playerTeamState_t
 	{
 		int location;
@@ -170,6 +161,15 @@ namespace game
 
 	namespace iw5
 	{
+		struct CmdArgs
+		{
+			int nesting;
+			LocalClientNum_t localClientNum[8];
+			int controllerIndex[8];
+			int argc[8];
+			const char** argv[8];
+		};
+
 		enum DvarFlags
 		{
 			DVAR_FLAG_NONE = 0,
@@ -396,16 +396,34 @@ namespace game
 			// clientnum   // 144 0x90
 		};
 
+		struct entityShared_s
+		{
+			char _0x108[0x30];
+			vec3_t origin;
+			vec3_t angles;
+			char _0x14C[0xC];
+		};
+
 		struct gentity_t
 		{
-			entityState_s state;
-			//entity_shared		shared;
-			//gclient_s			client; // 344 [0x158]
-		}; // 0x1F8
+			char pad[0x108];
+			entityShared_s shared;
+			gclient_t* client;
+		};
 	}
 
 	namespace t6
 	{
+		struct CmdArgs
+		{
+			int nesting;
+			LocalClientNum_t localClientNum[8];
+			int controllerIndex[8];
+			char pad[0x40];
+			int argc[8];
+			const char** argv[8];
+		};
+
 		enum dvarType_t
 		{
 			DVAR_TYPE_INVALID = 0x0,

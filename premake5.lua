@@ -1,6 +1,34 @@
--- ========================
--- Workspace
--- ========================
+dependencies = {
+	basePath = "./deps"
+}
+
+function dependencies.load()
+	dir = path.join(dependencies.basePath, "premake/*.lua")
+	deps = os.matchfiles(dir)
+
+	for i, dep in pairs(deps) do
+		dep = dep:gsub(".lua", "")
+		require(dep)
+	end
+end
+
+function dependencies.imports()
+	for i, proj in pairs(dependencies) do
+		if type(i) == 'number' then
+			proj.import()
+		end
+	end
+end
+
+function dependencies.projects()
+	for i, proj in pairs(dependencies) do
+		if type(i) == 'number' then
+			proj.project()
+		end
+	end
+end
+
+dependencies.load()
 
 workspace "ClanTagRank"
 	location "./build"
@@ -37,10 +65,6 @@ workspace "ClanTagRank"
 
 	startproject "ClanTagRank"
 
--- ========================
--- Projects
--- ========================
-
     project "ClanTagRank"
         kind "SharedLib"
         language "C++"
@@ -58,4 +82,9 @@ workspace "ClanTagRank"
             "src/**.h",
             "src/**.hpp",
             "src/**.cpp"
-        }
+		}
+
+		dependencies.imports()
+	
+	group "Dependencies"
+	dependencies.projects()

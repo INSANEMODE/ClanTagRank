@@ -1,150 +1,123 @@
-// Copyright 2020 xensik. All Rights Reserved.
-
 #pragma once
+
+// iw6x-client
 
 namespace utils::hook
 {
-	void* allocate_stub_memory(size_t size);
-
-	template<typename ValueType, typename AddressType>
-	inline ValueType get(AddressType address)
+	class detour
 	{
-		return *static_cast<ValueType*>(address);
+	public:
+		detour() = default;
+		detour(void* place, void* target);
+		detour(size_t place, void* target);
+		~detour();
+
+		detour(detour&& other) noexcept
+		{
+			this->operator=(std::move(other));
+		}
+
+		detour& operator= (detour&& other) noexcept
+		{
+			if (this != &other)
+			{
+				this->~detour();
+
+				this->place_ = other.place_;
+				this->original_ = other.original_;
+
+				other.place_ = nullptr;
+				other.original_ = nullptr;
+			}
+
+			return *this;
+		}
+
+		detour(const detour&) = delete;
+		detour& operator= (const detour&) = delete;
+
+		void enable() const;
+		void disable() const;
+
+		void create(void* place, void* target);
+		void create(size_t place, void* target);
+		void clear();
+
+		template <typename T>
+		T* get() const
+		{
+			return static_cast<T*>(this->get_original());
+		}
+
+		template <typename T, typename... Args>
+		T invoke(Args... args)
+		{
+			return static_cast<T(*)(Args ...)>(this->get_original())(args...);
+		}
+
+		[[nodiscard]] void* get_original() const;
+
+	private:
+		void* place_{};
+		void* original_{};
+	};
+
+	void nop(void* place, size_t length);
+	void nop(size_t place, size_t length);
+
+	void copy(void* place, const void* data, size_t length);
+	void copy(size_t place, const void* data, size_t length);
+
+	bool is_relatively_far(const void* pointer, const void* data, int offset = 5);
+
+	void call(void* pointer, void* data);
+	void call(size_t pointer, void* data);
+	void call(size_t pointer, size_t data);
+
+	void jump(void* pointer, void* data, bool use_far = false);
+	void jump(size_t pointer, void* data, bool use_far = false);
+	void jump(size_t pointer, size_t data, bool use_far = false);
+
+	void inject(void* pointer, const void* data);
+	void inject(size_t pointer, const void* data);
+
+	template <typename T>
+	T extract(void* address)
+	{
+		const auto data = static_cast<uint8_t*>(address);
+		const auto offset = *reinterpret_cast<int32_t*>(data);
+		return  reinterpret_cast<T>(data + offset + 4);
 	}
 
-	template<typename ValueType, typename AddressType>
-	inline void set(AddressType address, ValueType value)
+	void* follow_branch(void* address);
+
+	template <typename T>
+	static void set(void* place, T value)
 	{
-		std::memcpy((void*)address, &value, sizeof(value));
+		DWORD old_protect;
+		VirtualProtect(place, sizeof(T), PAGE_EXECUTE_READWRITE, &old_protect);
+
+		*static_cast<T*>(place) = value;
+
+		VirtualProtect(place, sizeof(T), old_protect, &old_protect);
+		FlushInstructionCache(GetCurrentProcess(), place, sizeof(T));
 	}
 
-	template<typename ValueType, typename AddressType>
-	inline void set(AddressType address, const ValueType* data, size_t length)
+	template <typename T>
+	static void set(const size_t place, T value)
 	{
-		std::memcpy((void*)address, data, sizeof(ValueType) * length);
+		return set<T>(reinterpret_cast<void*>(place), value);
 	}
 
-	template<typename AddressType>
-	inline void nop(AddressType address, size_t length)
+	template <typename T, typename... Args>
+	static T invoke(size_t func, Args... args)
 	{
-		std::memset((void*)address, 0x90, length);
+		return reinterpret_cast<T(*)(Args ...)>(func)(args...);
 	}
 
-	template<typename FuncType, typename AddressType>
-	inline void jump(AddressType address, FuncType func)
+	template <typename T, typename... Args>
+	static T invoke(void* func, Args... args)
 	{
-		set<uint8_t>(address, 0xE9);
-		set<uintptr_t>((uintptr_t)address + 1, (uintptr_t)func - (uintptr_t)address - 5);
+		return static_cast<T(*)(Args ...)>(func)(args...);
 	}
-
-	template<typename FuncType, typename AddressType>
-	inline void call(AddressType address, FuncType func)
-	{
-		set<uint8_t>(address, 0xE8);
-		set<int>((uintptr_t)address + 1, (intptr_t)func - (intptr_t)address - 5);
-	}
-
-	template<typename FuncType, typename AddressType>
-	FuncType detour(AddressType target, FuncType hook, const int len)
-	{
-		uintptr_t tampoline = (uintptr_t)allocate_stub_memory(len + 5);
-
-		std::memcpy((void*)tampoline, (void*)target, len);
-
-		set<uint8_t>(tampoline + len, 0xE9);
-		set<int>((uintptr_t)tampoline + len + 1, (intptr_t)target - (intptr_t)tampoline - 5);
-
-		set<uint8_t>(target, 0xE9);
-		set<int>((uintptr_t)target + 1, (intptr_t)hook - (intptr_t)target - 5);
-
-		int pos = len - 5;
-		if (pos > 0) nop((uintptr_t)target + 5, pos);
-
-		return reinterpret_cast<FuncType>(tampoline);
-	}
-
-namespace vp
-{
-	template<typename ValueType, typename AddressType>
-	inline void set(AddressType address, ValueType value)
-	{
-		DWORD oldProtect;
-		VirtualProtect((void*)address, sizeof(value), PAGE_EXECUTE_READWRITE, &oldProtect);
-
-		std::memcpy((void*)address, &value, sizeof(value));
-
-		VirtualProtect((void*)address, sizeof(value), oldProtect, &oldProtect);
-	}
-
-	template<typename ValueType, typename AddressType>
-	inline void set(AddressType address, const ValueType* data, size_t length)
-	{
-		DWORD oldProtect;
-		VirtualProtect((void*)address, sizeof(ValueType) * length, PAGE_EXECUTE_READWRITE, &oldProtect);
-
-		std::memcpy((void*)address, data, sizeof(ValueType) * length);
-
-		VirtualProtect((void*)address, sizeof(ValueType) * length, oldProtect, &oldProtect);
-	}
-
-	template<typename AddressType>
-	inline void nop(AddressType address, size_t length)
-	{
-		DWORD oldProtect;
-		VirtualProtect((void*)address, length, PAGE_EXECUTE_READWRITE, &oldProtect);
-
-		std::memset((void*)address, 0x90, length);
-
-		VirtualProtect((void*)address, length, oldProtect, &oldProtect);
-	}
-
-	template<typename FuncType, typename AddressType>
-	inline void jump(AddressType address, FuncType func)
-	{
-		DWORD oldProtect;
-		VirtualProtect((void*)address, 5, PAGE_EXECUTE_READWRITE, &oldProtect);
-
-		hook::set<uint8_t>(address, 0xE9);
-		hook::set<int>((uintptr_t)address + 1, (intptr_t)func - (intptr_t)address - 5);
-
-		VirtualProtect((void*)address, 5, oldProtect, &oldProtect);
-	}
-
-	template<typename FuncType, typename AddressType>
-	inline void call(AddressType address, FuncType func)
-	{
-		DWORD oldProtect;
-		VirtualProtect((void*)address, 5, PAGE_EXECUTE_READWRITE, &oldProtect);
-
-		hook::set<uint8_t>(address, 0xE8);
-		hook::set<int>((uintptr_t)address + 1, (intptr_t)func - (intptr_t)address - 5);
-
-		VirtualProtect((void*)address, 5, oldProtect, &oldProtect);
-	}
-
-	template<typename FuncType, typename AddressType>
-	FuncType detour(AddressType target, FuncType hook, const int len)
-	{
-		uintptr_t tampoline = (uintptr_t)allocate_stub_memory(len + 5);
-
-		std::memcpy((void*)tampoline, (void*)target, len);
-
-		hook::set<uint8_t>(tampoline + len, 0xE9);
-		hook::set<int>((uintptr_t)tampoline + len + 1, (intptr_t)target - (intptr_t)tampoline - 5);
-
-		DWORD oldProtect;
-		VirtualProtect((void*)target, len, PAGE_EXECUTE_READWRITE, &oldProtect);
-
-		hook::set<uint8_t>(target, 0xE9);
-		hook::set<int>((uintptr_t)target + 1, (intptr_t)hook - (intptr_t)target - 5);
-
-		int pos = len - 5;
-		if (pos > 0) hook::nop((uintptr_t)target + 5, pos);
-
-		VirtualProtect((void*)target, len, oldProtect, &oldProtect);
-
-		return reinterpret_cast<FuncType>(tampoline);
-	}
-}
-
 }

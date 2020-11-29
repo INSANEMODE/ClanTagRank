@@ -5,7 +5,7 @@ namespace command
 	std::unordered_map<std::string, std::function<void(params&)>> handlers;
 	std::unordered_map<std::string, std::function<void(int, params_sv&, std::function<void()>)>> handlers_sv;
 
-	game::ClientCommand_t ClientCommand_hook;
+	utils::hook::detour clientcommand_hook;
 
 	void main_handler()
 	{
@@ -44,12 +44,16 @@ namespace command
 
 	int params_sv::size()
 	{
-		return game::SV_Cmd_Argc();
+		return game::is_iw5() 
+			? game::iw5::SV_Cmd_Argc() 
+			: game::t6::SV_Cmd_Argc();
 	}
 
 	const char* params_sv::get(int index)
 	{
-		return game::SV_Cmd_Argv(index);
+		return game::is_iw5() 
+			? game::iw5::SV_Cmd_Argv(index) 
+			: game::t6::SV_Cmd_Argv(index);
 	}
 
 	std::string params_sv::join(int index)
@@ -91,7 +95,7 @@ namespace command
 
 	namespace
 	{
-		void ClientCommand_stub(int clientNum)
+		void clientcommand_stub(int clientNum)
 		{
 			params_sv params;
 
@@ -101,16 +105,16 @@ namespace command
 			{
 				return handlers_sv[command](clientNum, params, [clientNum]()
 				{
-					ClientCommand_hook(clientNum);
+					clientcommand_hook.invoke<void>(clientNum);
 				});
 			}
 
-			return ClientCommand_hook(clientNum);
+			return clientcommand_hook.invoke<void>(clientNum);
 		}
 	}
 
 	void init()
 	{
-		ClientCommand_hook = utils::hook::vp::detour(game::ClientCommand, ClientCommand_stub, 6);
+		clientcommand_hook.create(game::ClientCommand, clientcommand_stub);
 	}
 }

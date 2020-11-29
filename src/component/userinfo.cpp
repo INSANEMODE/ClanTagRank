@@ -2,7 +2,7 @@
 
 namespace
 {
-	game::Info_ValueForKey_t Info_ValueForKey_hook;
+	utils::hook::detour info_value_for_key_hook;
 	std::unordered_map<std::string, std::function<const char* (const char*, const char*, const char*, int)>> info_callbacks;
 
 	int client_num_from_userinfo(const char* s)
@@ -23,9 +23,9 @@ namespace
 		return -1;
 	}
 
-	const char* Info_ValueForKey_stub(const char* s, const char* key)
+	const char* info_value_for_key_stub(const char* s, const char* key)
 	{
-		const auto result = Info_ValueForKey_hook(s, key);
+		const auto result = info_value_for_key_hook.invoke<const char*>(s, key);
 
 		if (info_callbacks.find(key) != info_callbacks.end())
 		{
@@ -52,6 +52,6 @@ namespace userinfo
 
 	void init()
 	{
-		Info_ValueForKey_hook = utils::hook::vp::detour(game::Info_ValueForKey, Info_ValueForKey_stub, 5);
+		info_value_for_key_hook.create(game::Info_ValueForKey, info_value_for_key_stub);
 	}
 }
