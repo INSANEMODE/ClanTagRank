@@ -28,11 +28,18 @@ const char* using_tag_stub(const char* s, const char* key, const char* result, i
 
 void init()
 {
+    chat::add("!test", [](int clientNum, command::params_sv& params, std::function<void()> next)
+    {
+        int v1 = rand() % 100;
+        chat::tellraw(clientNum, "test " + std::to_string(v1));
+    });
+
     userinfo::add("ec_TagText", clantag_stub);
     userinfo::add("clanAbbrev", clantag_stub);
     userinfo::add("clanAbbrevEv", clantag_stub);
 
     userinfo::add("name", name_stub);
+
 
     userinfo::add("ec_usingTag", using_tag_stub);
 
@@ -227,13 +234,10 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
-        if (game::gamename != "t6mp"s && game::gamename != "t6zm"s)
-        {
-            command::init();
-            chat::init();
-        }
-
+        command::init();
+        chat::init();
         userinfo::init();
+
         init();
         break;
     }

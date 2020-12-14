@@ -15,13 +15,15 @@
 #include <sstream>
 #include <algorithm>
 #include <functional>
+#include <regex>
+
+#include <MinHook.h>
 
 using namespace std::literals;
 
 #include "utils/memory.hpp"
 #include "utils/string.hpp"
 #include "utils/hook.hpp"
-
 
 #include "game/structs.hpp"
 #include "game/game.hpp"

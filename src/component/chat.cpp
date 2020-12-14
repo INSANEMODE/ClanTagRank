@@ -2,15 +2,13 @@
 
 namespace
 {
-	game::ClientCommand_t ClientCommand_hook;
-
 	std::unordered_map<std::string, std::function<void(int, command::params_sv&, std::function<void()>)>> handlers;
 
 	void say_stub(int clientNum, command::params_sv& params, std::function<void()> next)
 	{
 		std::string name = params.get(1);
 
-		name.erase(0, 1);
+		name.erase(0, game::is_iw5());
 
 		if (handlers.find(name) != handlers.end())
 		{
