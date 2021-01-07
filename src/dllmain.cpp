@@ -2,7 +2,18 @@
 
 std::string clantags[18];
 std::string names[18];
+std::string auth[18];
+std::string get_auth_level(int clientNum)
+{
+    return auth[clientNum].empty() ? "0" : auth[clientNum].data();
+}
+void set_auth_level(int clientNum, std::string auth_level)
+{
+    auth[clientNum] = auth_level;
+    //game::ClientUserInfoChanged(clientNum);
 
+    printf("setting auth_level to %s for client %i\n", auth_level.c_str(), clientNum);
+}
 void set_clan_tag(int clientNum, std::string clantag)
 {
     clantags[clientNum] = clantag;
@@ -30,8 +41,16 @@ void init()
 {
     chat::add("!test", [](int clientNum, command::params_sv& params, std::function<void()> next)
     {
-        int v1 = rand() % 100;
-        chat::tellraw(clientNum, "test " + std::to_string(v1));
+        
+        if ( std::stoi(get_auth_level(clientNum)) > 1)
+        {
+            int v1 = rand() % 100;
+            chat::tellraw(clientNum, "test " + std::to_string(v1));
+        }
+        else
+        {
+            chat::tellraw(clientNum, "You don't have permission to perform this command");
+        }
     });
 
     userinfo::add("ec_TagText", clantag_stub);
@@ -218,6 +237,56 @@ void init()
 
         printf("renamed client %i to %s\n", clientNum, name);
     });
+
+    function::add("renameclient", 2, 2, []()
+    {
+        const auto client = game::Scr_GetInt(game::SCRIPTINSTANCE_SERVER, 0);
+        const auto name = game::Scr_GetString(game::SCRIPTINSTANCE_SERVER, 1);
+
+        const auto clientNum = client;
+        const auto sv_maxclients = game::get_maxclients();
+
+        if (clientNum >= sv_maxclients)
+        {
+            return;
+        }
+
+        names[clientNum] = name;
+        game::ClientUserInfoChanged(clientNum);
+
+        printf("renamed client %i to %s\n", clientNum, name);
+    });
+
+    function::add("cbuf_addtext", 2, 2, []()
+    {
+        const auto client = game::Scr_GetInt(game::SCRIPTINSTANCE_SERVER, 0);
+        const auto command = game::Scr_GetString(game::SCRIPTINSTANCE_SERVER, 1);
+
+        const auto clientNum = client;
+        const auto sv_maxclients = game::get_maxclients();
+
+        if (clientNum >= sv_maxclients)
+        {
+            return;
+        }
+        game::Cbuf_AddText(clientNum, command);
+    });
+
+    command::add("authenticate", [](command::params& params)
+    {
+        const auto client = params.get(1);
+        auto auth = params.get(2);
+
+        const auto clientNum = atoi(client);
+        auto sv_maxclients = game::get_maxclients();
+
+        if (clientNum >= sv_maxclients)
+        {
+            return;
+        }
+
+        set_auth_level(clientNum, auth);
+    });
 }
 
 DLL_EXPORT void on_initialize_context(const char* script, chaiscript::ChaiScript* chai) { }
@@ -237,6 +306,10 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         command::init();
         chat::init();
         userinfo::init();
+
+        game::init();
+
+        gsc::setup();
 
         init();
         break;
