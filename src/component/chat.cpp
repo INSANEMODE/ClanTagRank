@@ -7,7 +7,20 @@ namespace
 	void say_stub(int clientNum, command::params_sv& params, std::function<void()> next)
 	{
 		std::string name = params.get(1);
+		//chat::tellraw(clientNum, "You don't have permission to perform this command");
+		name.erase(0, game::is_iw5());
 
+		if (handlers.find(name) != handlers.end())
+		{
+			return handlers[name](clientNum, params, next);
+		}
+
+		next();
+	}
+	void test_stub(int clientNum, command::params_sv& params, std::function<void()> next)
+	{
+		std::string name = params.get(1);
+		chat::tellraw(clientNum, "You don't have permission to perform this command");
 		name.erase(0, game::is_iw5());
 
 		if (handlers.find(name) != handlers.end())
@@ -42,5 +55,6 @@ namespace chat
 	{
 		command::add_sv("say", say_stub);
 		command::add_sv("say_team", say_stub);
+		command::add_sv("test", test_stub);
 	}
 }

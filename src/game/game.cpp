@@ -58,6 +58,7 @@ namespace game
 	SV_GetUserInfo_t SV_GetUserInfo = SV_GetUserInfo_t(SELECT_VALUE(0x68BB90, 0x4C10F0, 0x573E00));
 	SV_GameSendServerCommand_t SV_GameSendServerCommand = SV_GameSendServerCommand_t(SELECT_VALUE(0x45D7D0, 0x40D450, 0x573220));
 
+
 	namespace iw5
 	{
 		Dvar_FindVar_t Dvar_FindVar = Dvar_FindVar_t(SELECT_VALUE(0x563A70, 0x673C80, 0x5BDCC0));

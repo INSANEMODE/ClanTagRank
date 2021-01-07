@@ -1,7 +1,89 @@
 #pragma once
 
+
+//enum scriptInstance_t
+//{
+//	SCRIPTINSTANCE_SERVER,
+//	SCRIPTINSTANCE_CLIENT,
+//};
+//
+//struct scr_entref_t
+//{
+//	unsigned short entnum;
+//	unsigned short classnum;
+//	unsigned short client;
+//};
+//
+//struct BuiltinMethodDef
+//{
+//	const char* actionString;
+//	unsigned int constId;
+//	int min_args;
+//	int max_args;
+//	void(__cdecl* actionFunc)(scr_entref_t);
+//	int type;
+//};
+//
+//struct BuiltinFunctionDef
+//{
+//	const char* actionString;
+//	unsigned int constId;
+//	int min_args;
+//	int max_args;
+//	void(__cdecl* actionFunc)();
+//	int type;
+//};
+//
+//struct gentity_s
+//{
+//	int entity_num;
+//	char data[0x318];
+//};
+//
+
 namespace game
 {
+
+	enum scriptInstance_t
+	{
+		SCRIPTINSTANCE_SERVER,
+		SCRIPTINSTANCE_CLIENT,
+	};
+
+	struct scr_entref_t
+	{
+		unsigned short entnum;
+		unsigned short classnum;
+		unsigned short client;
+	};
+
+	struct BuiltinMethodDef
+	{
+		const char* actionString;
+		unsigned int constId;
+		int min_args;
+		int max_args;
+		void(__cdecl* actionFunc)(scr_entref_t);
+		int type;
+	};
+
+	struct BuiltinFunctionDef
+	{
+		const char* actionString;
+		unsigned int constId;
+		int min_args;
+		int max_args;
+		void(__cdecl* actionFunc)();
+		int type;
+	};
+
+	struct gentity_s
+	{
+		int entity_num;
+		char data[0x318];
+	};
+
+
 	typedef float vec_t;
 	typedef vec_t vec2_t[2];
 	typedef vec_t vec3_t[3];
@@ -602,5 +684,6 @@ namespace game
 			gclient_t* client;
 			char _0x158[0x1C4];
 		};
+
 	}
 }
